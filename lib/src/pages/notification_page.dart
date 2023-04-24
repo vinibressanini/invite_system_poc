@@ -13,10 +13,10 @@ class NotificationPage extends StatefulWidget {
 
 class _NotificationPageState extends State<NotificationPage> {
   final notificationService = getIt.get<NotificationService>();
-  final Stream<QuerySnapshot> _invitesStream = FirebaseFirestore.instance
-      .collection('invites')
-      .where("destiny", isEqualTo: "Teste")
-      .snapshots();
+
+  final _db = FirebaseFirestore.instance;
+
+  late final Stream<QuerySnapshot> _invitesStream;
 
   showNotification() {
     _invitesStream.listen((event) {
@@ -25,9 +25,19 @@ class _NotificationPageState extends State<NotificationPage> {
             id: 1,
             title: 'You have a new invite',
             body:
-                '${event.docs.last.get('sender')} wants you to join ${event.docs.first.get('team')}'),
+                '${event.docs.last.get('sender')} wants you to join ${event.docs.last.get('team')}'),
       );
     });
+  }
+
+  @override
+  void initState() {
+    _invitesStream = _db
+        .collection('invites')
+        .where("destiny", isEqualTo: "Teste")
+        .orderBy("timestamp")
+        .snapshots();
+    super.initState();
   }
 
   @override
@@ -40,6 +50,7 @@ class _NotificationPageState extends State<NotificationPage> {
         stream: _invitesStream,
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasError) {
+            debugPrint(snapshot.error.toString());
             return const Text('Something went wrong');
           }
 
