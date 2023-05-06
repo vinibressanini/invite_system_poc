@@ -14,9 +14,9 @@ final _db = FirebaseFirestore.instance;
 sendInvite() {
   Map<String, dynamic> data = {
     "destiny": "Teste",
-    "sender": "Messi",
+    "sender": "abc",
     "status": "pending",
-    "team": "PSG",
+    "team": "vasco",
     "timestamp": DateTime.now()
   };
 

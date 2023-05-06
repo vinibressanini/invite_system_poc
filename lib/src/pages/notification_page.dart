@@ -32,11 +32,7 @@ class _NotificationPageState extends State<NotificationPage> {
 
   @override
   void initState() {
-    _invitesStream = _db
-        .collection('invites')
-        .where("destiny", isEqualTo: "Teste")
-        .orderBy("timestamp")
-        .snapshots();
+    _invitesStream = _db.collection('invites').orderBy("timestamp").snapshots();
     super.initState();
   }
 
