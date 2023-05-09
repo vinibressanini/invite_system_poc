@@ -18,21 +18,13 @@ class _NotificationPageState extends State<NotificationPage> {
 
   late final Stream<QuerySnapshot> _invitesStream;
 
-  showNotification() {
-    _invitesStream.listen((event) {
-      notificationService.showLocalNotification(
-        CustomNotification(
-            id: 1,
-            title: 'You have a new invite',
-            body:
-                '${event.docs.last.get('sender')} wants you to join ${event.docs.last.get('team')}'),
-      );
-    });
-  }
 
   @override
   void initState() {
-    _invitesStream = _db.collection('invites').orderBy("timestamp").snapshots();
+    _invitesStream = _db
+        .collection('users')
+        .where("email", isEqualTo: "vinimarcus41@gmail.com")
+        .snapshots();
     super.initState();
   }
 
@@ -54,19 +46,16 @@ class _NotificationPageState extends State<NotificationPage> {
             return const Text("Loading");
           }
 
-          showNotification();
-          return ListView(
-            children: snapshot.data!.docs
-                .map((DocumentSnapshot document) {
-                  Map<String, dynamic> data =
-                      document.data()! as Map<String, dynamic>;
-                  return ListTile(
-                    title: Text(data['sender']),
-                    subtitle: Text(data['team']),
-                  );
-                })
-                .toList()
-                .cast(),
+          List<dynamic> invites = snapshot.data!.docs.first.get("invites");
+          return ListView.builder(
+            itemCount: invites.length,
+            itemBuilder: (context, index) {
+              return ListTile(
+                title: Text(invites[index]['sender']),
+                subtitle: Text(invites[index]['team']),
+                trailing: Text(invites[index]['status']),
+              );
+            },
           );
         },
       ),
