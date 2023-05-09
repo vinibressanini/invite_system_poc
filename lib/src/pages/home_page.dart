@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:invite_system_poc/env/env.dart';
 import 'package:invite_system_poc/get_it.dart';
 import 'package:invite_system_poc/src/pages/notification_page.dart';
 
@@ -36,10 +37,7 @@ sendInvite(BuildContext context) async {
       "fcm/send",
       data: data,
       options: Options(
-        headers: {
-          "authorization":
-              "Bearer AAAAhcmvhw4:APA91bHavEVl1JWYs502qFQxd2sbyj_sR9IDDH3VmrVXRO5Ct3TQC_LsR11rZernYM_I2CT0zXgvm96s11hMVDN_TnRmuxqXhed3AaBxmbpvjDMtJDyXBitVk6JW7RsNV_JZzF7Xr5PO"
-        },
+        headers: {"authorization": "Bearer ${Env.fmcKey}"},
       ),
     );
   } on StateError {
